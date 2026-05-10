@@ -21,7 +21,7 @@ SELECT
 	COUNT (*) AS total_movies
 FROM movies
 GROUP BY YEAR (release_date)
-ORDER BY ano DESC
+ORDER BY years DESC
 GO;
 
 --Average popularity by year

@@ -1,26 +1,20 @@
-# IMPORTAR BIBLIOTECAS
+# IMPORT LIBRARIES
 import requests
 import pandas as pd
+import pyodbc
 from config import API_KEY, BASE_URL
 
-# URL DA API
+# EXTRACT
 url = f"{BASE_URL}/movie/popular?api_key={API_KEY}"
-
-# PEDIR DADOS À API
 response = requests.get(url)
 
-# VERIFICAR SE FUNCIONOU
 if response.status_code == 200:
     data = response.json()
     movies = data["results"]
 
     # TRANSFORM
     df = pd.DataFrame(movies)
-
-    # Filtrar colunas
     df = df[["title", "release_date", "popularity"]]
-
-    # Limpar/transformar os dados
     df = df.drop_duplicates()
     df["title"] = df["title"].str.strip()
     df = df.dropna(subset=["release_date", "popularity"])
@@ -31,13 +25,26 @@ if response.status_code == 200:
     print("\n📊 Dados organizados:")
     print(df.head())
 
-    print("✅ Sucesso! Filmes recebidos:\n")
+    # LOAD
+    conn = pyodbc.connect(
+        "DRIVER={ODBC Driver 17 for SQL Server};"
+        "SERVER=.\\SQLEXPRESS;"
+        "DATABASE=TMDB;"
+        "Trusted_Connection=yes;"
+    )
+    cursor = conn.cursor()
 
-    for movie in movies[:3]:
-        print("Título:", movie["title"])
-        print("Data:", movie["release_date"])
-        print("Popularidade:", movie["popularity"])
-        print("-" * 30)
+    for _, row in df.iterrows():
+        cursor.execute("""
+            INSERT INTO Movies (title, release_date, popularity)
+            VALUES (?, ?, ?)
+        """, row["title"], row["release_date"], row["popularity"])
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    print("✅ Dados carregados no SQL Server com sucesso!")
 
 else:
     print("❌ Erro:", response.status_code)
