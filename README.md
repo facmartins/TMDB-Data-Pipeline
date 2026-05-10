@@ -1,3 +1,4 @@
+
 # 🎬 TMDB Movie Data Pipeline
 An ETL data engineering project that extracts popular movie data from the TMDB API, transforms and cleans it using Python, and loads it into SQL Server for analysis.
 
@@ -44,11 +45,11 @@ Build an ETL pipeline that extracts popular movie data from the TMDB API, transf
 ---
 
 ## 📁 Project Structure
-pipeline.py           # ETL pipeline
-config.py             # API credentials (not included)
-create_tables.sql     # SQL Server table creation
-analysis_queries.sql  # SQL analysis queries
-README.md             # Project documentation
+├── pipeline.py           # ETL pipeline
+├── config.py             # API credentials (not included)
+├── create_tables.sql     # SQL Server table creation
+├── analysis_queries.sql  # SQL analysis queries
+└── README.md             # Project documentation
 
 ---
 
@@ -56,14 +57,14 @@ README.md             # Project documentation
 
 ### Top 10 Most Popular Movies
 SELECT TOP 10 title, popularity
-FROM Filmes
+FROM Movies
 ORDER BY popularity DESC
 
 ### Total Movies by Year
 SELECT 
     YEAR(release_date) AS year,
     COUNT(*) AS total_movies
-FROM Filmes
+FROM Movies
 GROUP BY YEAR(release_date)
 ORDER BY year DESC
 
@@ -71,7 +72,7 @@ ORDER BY year DESC
 SELECT 
     YEAR(release_date) AS year,
     ROUND(AVG(popularity), 2) AS avg_popularity
-FROM Filmes
+FROM Movies
 GROUP BY YEAR(release_date)
 ORDER BY avg_popularity DESC
 

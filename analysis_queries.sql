@@ -10,7 +10,7 @@
 SELECT TOP 10
 title, 
 popularity
-FROM movies 
+FROM Movies
 ORDER BY popularity DESC
 
 
@@ -19,15 +19,15 @@ ORDER BY popularity DESC
 SELECT
 	YEAR (release_date) AS years,
 	COUNT (*) AS total_movies
-FROM movies
+FROM Movies
 GROUP BY YEAR (release_date)
 ORDER BY years DESC
-GO;
+
 
 --Average popularity by year
 SELECT
 	YEAR(release_date) AS years,
 	ROUND(AVG(popularity), 2) AS popularity_avg
-FROM movies
+FROM Movies
 GROUP BY YEAR(release_date)
 ORDER BY popularity_avg DESC
